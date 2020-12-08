@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+
+
+
+<canvas id="canvas" width="1000" height="1000"></canvas>
+
+<button class="runLayout">开始布局</button>
+<button class="stopLayout">停止布局</button>
+
+
+
+<script src="data.js"></script>
+<script src="fr.js"></script>
+<script src="fastv.js"></script>
+<script>
+	document.getElementById("canvas").width = document.body.clientWidth;
+	fastV.init(document.getElementById("canvas"))
+	// var nodes = [
+
+ //            {"id":1,"properties":{},"value":"10297917808","x":500.0,"y":336.0},
+ //            {"id":2,"properties":{},"value":"10297917808","x":500.0,"y":336.0},
+ //            {"id":3,"properties":{},"value":"10297917808","x":520,"y":336.0},
+
+ //    ]
+ //    var links = [
+
+ //            {"properties":{},"source":1,"target":2,"weight":1},
+ //            {"properties":{},"source":1,"target":3,"weight":1}
+ //    ]
+    function getNodeofLink(links){
+    	let source,target;
+    	fastV.nodes.map(e=>{
+    		if(e.id == links.source){
+    			source = e 
+    		}
+    		if(e.id == links.target){
+    			target = e
+    		}
+    	})
+    	return {
+    		"source":source,
+    		"target":target
+    	}
+    }
+    data1.nodes.map(e=>{
+
+    	var node = fastV.CircleNode(e.id,e.x,e.y)
+    	fastV.nodes.push(node)
+
+    })
+
+    data1.links.map(e=>{
+    	let o = getNodeofLink(e)
+    	var link = fastV.FoldLink(o.source,o.target)
+    	fastV.links.push(link)
+    })
+
+      fastV.draw()
+      
+      var layout,loopName;
+
+      document.querySelector(".runLayout").onclick = function(){
+      	  layout = new FRlayout(fastV.nodes,fastV.links);
+	      layout.initAlgo();
+	      // layout.runLayout();
+	      function loop(){
+	        cancelAnimationFrame(loopName);
+	        layout.runLayout();
+			fastV.draw()
+	        loopName = requestAnimationFrame(loop);
+	      };
+	      loopName = requestAnimationFrame(loop);
+      }
+      document.querySelector(".stopLayout").onclick = function(){
+      	  cancelAnimationFrame(loopName);
+      }
+      // console.log(fastV.nodes)
+     
+
+
+
+</script>
+</body>
+</html>
